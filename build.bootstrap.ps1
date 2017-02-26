@@ -5,7 +5,7 @@
     [string]$environment = "dev",
     [string]$buildNumber="1.0.0")
 
-$PSBuildPath = Join-Path $baseDir "PSBuild"
+$PSBuildPath = Join-Path $baseDir "powershell-build"
 $private:taskExecutionInfo = @();
 $private:totalBuildTime = New-TimeSpan;
 
