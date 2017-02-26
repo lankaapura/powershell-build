@@ -13,7 +13,7 @@ function Deploy-Filesystem($artifactPath, $artifactConfig){
         Remove-Item "$($artifactConfig.path)\*" -Recurse -Force 
     }
 
-    Write-Host "Extracting artifact to $artifactConfig.path"
+    Write-Host "Extracting artifact to $($artifactConfig.path)"
     Invoke-ZipExtract $artifactPath $artifactConfig.path
 }
 
