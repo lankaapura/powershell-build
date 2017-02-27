@@ -10,7 +10,9 @@ function Deploy-Filesystem($artifactPath, $artifactConfig){
         New-Item -ItemType Directory $artifactConfig.path
     }else{
         Write-Host "Target path exists, cleaning: $($artifactConfig.path)"
-        Get-ChildItem $artifactConfig.path | ForEach { Remove-Item $_.FullName -Recurse -Force }		
+        $fso = New-Object -ComObject scripting.filesystemobject
+        $fso.DeleteFolder(“$($artifactConfig.path)\*”)
+        Get-ChildItem -Path $artifactConfig.path -Include * | ForEach { Remove-Item $_.FullName }
     }
 
     Write-Host "Extracting artifact to $($artifactConfig.path)"
