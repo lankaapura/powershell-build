@@ -30,6 +30,10 @@ if (Test-Path $configFileEnvPath) {
 
 Get-ChildItem (Join-Path $PSBuildPath "tasks") | Where { $_.Name -like '*.ps1'} | ForEach { . $_.FullName }
 
+if (Test-Path (Join-Path $baseDir "build.custom.ps1")) {
+	. (Join-Path $baseDir "build.custom.ps1")
+}
+
 Write-Host "base dir: $baseDir"
 Write-Host "workflow: $workflow"
 Write-Host "environment: $environment"
