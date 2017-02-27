@@ -10,7 +10,7 @@ function Deploy-Filesystem($artifactPath, $artifactConfig){
         New-Item -ItemType Directory $artifactConfig.path
     }else{
         Write-Host "Target path exists, cleaning: $($artifactConfig.path)"
-        Remove-Item "$($artifactConfig.path)\*" -Recurse -Force 
+        Get-ChildItem $artifactConfig.path | ForEach { Remove-Item $_.FullName -Recurse -Force }		
     }
 
     Write-Host "Extracting artifact to $($artifactConfig.path)"
@@ -20,20 +20,22 @@ function Deploy-Filesystem($artifactPath, $artifactConfig){
 Task Deploy {
     $buildPath = Get-Conventions buildPath
 
-    $config.artifacts.Keys | % { 
-        $artifactConfig = $config.artifacts.Item($_)
-        $artifactPath = Join-Path $buildPath $_
+	if($config.artifact -eq $null){
+		throw "Artifact configuration not defined"
+	}	
+	
+	if($config.artifact.deploy -eq $null){
+		throw "Deploy configuration not defined"
+	}		
+	
+	$artifactPath = Join-Path $buildPath $config.artifact.name
+	if(-not (Test-Path $artifactPath)){
+		throw "Artifact not found: $artifactPath"
+	}
 
-        if($artifactConfig.deploy -ne $null){
-            if(-not (Test-Path $artifactPath)){
-                throw "Artifact not found: $artifactPath"
-            }
-
-            switch ($artifactConfig.deploy.strategy) 
-            { 
-                "filesystem" { Deploy-Filesystem $artifactPath $artifactConfig.deploy }
-                default { throw "Deploy strategy not implemented: $($artifactConfig.deploy.strategy)" }
-            }
-        }
-    }
+	switch ($config.artifact.deploy.strategy) 
+	{ 
+		"filesystem" { Deploy-Filesystem $artifactPath $config.artifact.deploy }
+		default { throw "Deploy strategy not implemented: $($artifactConfig.deploy.strategy)" }
+	}
 }
