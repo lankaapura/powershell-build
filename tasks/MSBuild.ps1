@@ -11,17 +11,6 @@ Task MsBuild {
         throw "Solution path not found: $solutionPath"
     }
 
-
     # OutDir property MUST end with two slashes when called through powershell
     Exec { & $msbuild $solutionPath "/target:Rebuild" "/p:OutDir=$buildPath\\" "/p:Configuration=Release" "/p:Platform=Any Cpu" }
-
-    $envConfigPath = Join-Path $configPath $environment
-    if(Test-Path -PathType Container $envConfigPath){
-        $destinationPath = Join-Path $buildPath "_PublishedWebsites\$($config.applicationName)"
-        Write-Host "Copying environment configuration"
-        Get-ChildItem -Path $envConfigPath | ForEach {
-            Write-Host " - $($_.FullName) -> " + $destinationPath
-            Copy-Item $_.FullName -Destination $destinationPath -Recurse -Force
-        }
-    }
 }
