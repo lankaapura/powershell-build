@@ -31,7 +31,7 @@ Task NUnitTestCoverage {
         & $opencover `
         "-target:$nunit" `
         "-targetargs:$testPaths --result=$testResultPath" `
-        "-filter:+[*]* -[$($config.applicationName)*.Tests]* $COVERAGE_FILTERS" `
+        "-filter:+[*]* -[$($config.applicationName)*.Tests]* $($config.coverageFilters)" `
         "-output:$coverageResultPath" `
         "-skipautoprops" `
         "-register:user" `
