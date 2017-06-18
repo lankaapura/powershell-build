@@ -4,7 +4,7 @@
     [string]$workflow = "build",
     [string]$environment = "dev",
     [string]$buildNumber="1.0.0")
-
+	
 # Exit on any error (external program calls are already wrapped)
 $ErrorActionPreference = "Stop"	
 	
